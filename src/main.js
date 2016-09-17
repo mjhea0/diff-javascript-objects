@@ -12,23 +12,25 @@ function getDiff(oldList, updatedList, callback) {
       return userObject;
     }
     // yes? => check to see if the user has been changed
-    return listChanges(item, user);
+    return getListChanges(item, user);
   });
   // get new users
-  const newUsers = newUsers(oldList, updatedList);
+  const newUsers = getNewUsers(oldList, updatedList);
   // add new users to the list
   callback(null, removedAndChangedUsers.concat(newUsers));
 }
 
 // *** helpers *** //
 
-function findUserById(id, array) {
-  return array.filter((user) => user.id === id)[0];
+function findUserById(id, arr) {
+  const user = arr.filter((user) => user.id === id)[0];
+  if (!user) return false;
+  return user;
 }
 
-function newUsers(oldList, updatedList) {
-  // iterating through the new list
-  return updatedList.map((prev, curr) => {
+function getNewUsers(oldList, updatedList) {
+  // iterate through the new list
+  return updatedList.filter((curr) => {
     // is new user in the old list?
     const user = findUserById(curr.id, oldList);
     // no?
@@ -37,12 +39,10 @@ function newUsers(oldList, updatedList) {
       newObject.type = 'ADD';
       return newObject;
     }
-    // yes?
-    return prev;
   });
 }
 
-function listChanges(currentUser, newUser) {
+function getListChanges(currentUser, newUser) {
   const updatedUser = {
     id: currentUser.id,
     type: 'CHANGE'
@@ -56,5 +56,8 @@ function listChanges(currentUser, newUser) {
 }
 
 module.exports = {
-  getDiff
+  getDiff,
+  findUserById,
+  getNewUsers,
+  getListChanges
 };
