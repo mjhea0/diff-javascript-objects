@@ -10,7 +10,6 @@ describe('integration', () => {
   describe('getDiff()', () => {
     it('should return a new array of objects', (done) => {
       main.getDiff(fixtures.oldList, fixtures.updatedList, (err, res) => {
-        console.log(res);
         should.not.exist(err);
         res.length.should.eql(4);
         res[0].id.should.eql(1);
